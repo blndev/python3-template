@@ -67,17 +67,23 @@ integrationtest:
 # 	$(SOURCE_ENV) && .env/bin/py.test
 test: unittest integrationtest checkstyle
 
-testci: stylecheck
-	$(SOURCE_ENV) && .env/bin/py.test --junitxml=build/testresults.xml #$(OUTPUT_BUILD_TESTRESULT)
-
 run: test checkstyle
 	$(SOURCE_ENV) && src/main.py 
 
 startdebug: 
 	$(SOURCE_ENV) && src/main.py --debug
 
-buildDocker:
-	docker build .
+docker:
+ifndef image
+$(error 'image' is not set - image=imagename)
+endif
+ifndef tag
+$(error 'tag' is not set - tag=1.0)
+endif
+ifndef git_commit
+$(error 'git_commit' is not set)
+endif
+	docker build . -t $(image):$(tag) -t $(image):${git_commit}
 
 #Please choose here the right Option
 installDependencies: installDependenciesSetupPy
@@ -86,5 +92,4 @@ installDependencies: installDependenciesSetupPy
 devenv: devenvSetupPy
 #devenv: devenvReqTXT
 
-ci: installDependencies testci buildDocker
-	
+ci: installDependencies testci	
