@@ -1,5 +1,28 @@
 # python3-template
-basic things i like to have in all of my python projects
+Basic things i like to have in all of my python projects.
+This Template installs Flask as a sample runtime requirement.
+
+## Dependencies
+
+This Template contains (currently) two different ways to handle requirements.
+Before you start choose one option and remove the unnecessary files.
+
+For Containers use
+* requirements.txt
+* requirements-dev.txt
+* dockerfile
+
+For Libraries or Packages like dep or rpm use
+* setup.py
+
+### setup.py
+First way is based on setup.py. That is the right way if you want to distribute
+a library or standalone package. BUt you have to specify more advanced 
+information like package directory etc.
+
+### requirements.txt
+The second way is based on the classical requirements.txt files. It is the
+preferred way if you want to package your sources into an container.
 
 ## Prepare Dev Environment
 * install python 3
@@ -30,3 +53,4 @@ Another option is to execute the following Steps manually:
 ## Prepare Deployment and CI/CD pipeline
 The command ```make ci``` will install all dev and test dependencies, run tests,
 run style checks and finally build the docker container. 
+

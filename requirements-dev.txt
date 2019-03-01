@@ -1,0 +1,6 @@
+pytest
+pylint
+pylint2junit
+check-manifest
+coverage
+pycodestyle

@@ -22,10 +22,12 @@ installEnv:
 
 installDependencies: installEnv
 	@#install requirements defined in setup.py
+	@#$(SOURCE_ENV) && $(PIP) install --no-cache-dir -r requirements.txt
 	@$(SOURCE_ENV) && $(PIP) install . 
 
 devenv: installDependencies
 	# there is a separate task for runtime dependencies and dev dependencies 
+	@#$(SOURCE_ENV) && $(PIP) install --no-cache-dir -r requirements-dev.txt
 	$(SOURCE_ENV) && $(PIP) install -e .[dev,test] # install development and testing packages
 
 .IGNORE:

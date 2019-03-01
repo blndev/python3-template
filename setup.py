@@ -15,8 +15,9 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-with open(path.join(here, 'readme.md'), encoding='utf-8') as f:
-    long_description = f.read()
+with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+        long_description = f.read()
+
 
 setup(
     name='BLNDEV - Python 3 App Template',
@@ -70,6 +71,7 @@ setup(
     packages=find_packages('src', exclude=['contrib', 'docs', 'unittests']),
     # packages=find_packages('src'),
     package_dir={'': 'src'},
+ 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
     #   py_modules=["my_module"],
