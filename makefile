@@ -2,7 +2,7 @@
 # Author:  blndev
 # Version: 1.0
 # -----------------------------------------------------------------------------
-# Basic makefile to handle python projects
+# Basic makefile to handle most python projects
 # Support for dependency managament, build, test and more
 # -----------------------------------------------------------------------------
 
@@ -10,26 +10,21 @@
 # OUTPUT_BUILD = "build/"
 # OUTPUT_BUILD_TESTRESULT = $(OUTPUT_BUILD) + "testresults.xml"
 
-PYTHON=.env/bin/python # path to pyphon
+PYTHON=.env/bin/python # path to pyphon executable
 PIP=.env/bin/pip # path to pip
 SOURCE_ENV=. .env/bin/activate # shell within the environment
 
-info: #check_env
-	#TODO: create better output for help
-	cat readme.md
-
-check_env:
-	$(SOURCE_ENV) ifndef VIRTUAL_ENV
-		$(error "! You don't appear to be in a virtual environment.")
-	endif
+info: 
+	@cat README.md
 
 installEnv:
 	python3 -m venv .env
 
 installDependencies: installEnv
-	$(SOURCE_ENV) && $(PIP) install . #install requirements defined in setup.py
+	@#install requirements defined in setup.py
+	@$(SOURCE_ENV) && $(PIP) install . 
 
-install: installDependencies
+devenv: installDependencies
 	# there is a separate task for runtime dependencies and dev dependencies 
 	$(SOURCE_ENV) && $(PIP) install -e .[dev,test] # install development and testing packages
 
@@ -68,10 +63,14 @@ testci: lint
 	$(SOURCE_ENV) && .env/bin/py.test --junitxml=build/testresults.xml #$(OUTPUT_BUILD_TESTRESULT)
 	$(SOURCE_ENV) && .env/bin/pylint --exit-zero --output-format=pylint2junit.JunitReporter src > build/stylecheck.xml
 
-start: test lint
+run: test lint
 	$(SOURCE_ENV) && src/main.py 
 
 startdebug: 
 	$(SOURCE_ENV) && src/main.py --debug
 
-ci: installDependencies testci
+buildDocker:
+	docker build .
+
+ci: installDependencies testci buildDocker
+	
