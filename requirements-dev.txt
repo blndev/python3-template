@@ -3,4 +3,5 @@ pylint
 pylint2junit
 check-manifest
 coverage
+pytest-cov
 pycodestyle
