@@ -6,7 +6,7 @@
 # Support for dependency managament, build, test and more
 # -----------------------------------------------------------------------------
 
-# Configuration
+# Configuration (TODO)
 # OUTPUT_BUILD = "build/"
 # OUTPUT_BUILD_TESTRESULT = $(OUTPUT_BUILD) + "testresults.xml"
 
@@ -40,8 +40,14 @@ devenvReqTXT: installDependenciesReqTXT
 .IGNORE:
 checkstyle:
 	@-$(SOURCE_ENV) && pylint --exit-zero src tests
-	@-$(SOURCE_ENV) && pycodestyle --statistics --show-source src tests
-	@-$(SOURCE_ENV) && .env/bin/pylint --exit-zero --output-format=pylint2junit.JunitReporter src > build/stylecheck.xml
+	@-$(SOURCE_ENV) && pycodestyle \
+	--statistics \
+	--show-source src tests
+	
+	@-$(SOURCE_ENV) && pylint \
+	--exit-zero \
+	--output-format=pylint2junit.JunitReporter \
+	src > build/stylecheck.xml
 
 unittest:
 	@$(SOURCE_ENV) && py.test tests/unittests/ \
@@ -63,8 +69,6 @@ integrationtest:
 	  --cov-report annotate \
 	  --cov-report term
 	  
-# test:
-# 	$(SOURCE_ENV) && .env/bin/py.test
 test: unittest integrationtest checkstyle
 
 run: test checkstyle
@@ -74,15 +78,15 @@ startdebug:
 	$(SOURCE_ENV) && src/main.py --debug
 
 docker:
-ifndef image
-$(error 'image' is not set - image=imagename)
-endif
-ifndef tag
-$(error 'tag' is not set - tag=1.0)
-endif
-ifndef git_commit
-$(error 'git_commit' is not set)
-endif
+	ifndef image
+	$(error 'image' is not set - image=imagename)
+	endif
+	ifndef tag
+	$(error 'tag' is not set - tag=1.0)
+	endif
+	ifndef git_commit
+	$(error 'git_commit' is not set)
+	endif
 	docker build . -t $(image):$(tag) -t $(image):${git_commit}
 
 #Please choose here the right Option
