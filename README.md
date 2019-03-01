@@ -6,6 +6,8 @@ This Template installs Flask as a sample runtime requirement.
 
 This Template contains (currently) two different ways to handle requirements.
 Before you start choose one option and remove the unnecessary files.
+Then go into the makefile and activate / deactivate the way you want to handle 
+the dependencies.
 
 For Containers use
 * requirements.txt
