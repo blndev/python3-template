@@ -72,10 +72,10 @@ integrationtest:
 test: unittest integrationtest checkstyle
 
 run: test checkstyle
-	$(SOURCE_ENV) && src/main.py 
+	$(PYTHON) src/main.py 
 
 startdebug: 
-	$(SOURCE_ENV) && src/main.py --debug
+	$(PYTHON) src/main.py --debug
 
 docker:
 	ifndef image
