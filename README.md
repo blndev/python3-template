@@ -43,7 +43,7 @@ runs.
 Another option is to execute the following Steps manually:
 
 ### Create and activate Virtual Environment with dependencies
-    python3 -m venev .env
+    python3 -m venv .env
     .env/Scripts/activate[.bat|ps1]
 
 ### Load Dependencies required for Development
