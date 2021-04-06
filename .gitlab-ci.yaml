@@ -1,0 +1,79 @@
+image: python:3
+
+before_script:  
+  # # extract semantic version out of git tag
+  # # must be RELEASE-1.0.3
+  # - tagversion=( ${CI_COMMIT_TAG//-/ } )
+  # - product_version="${tagversion[1]}"
+  # - echo "${product_version}"
+  # - semver=( ${product_version//./ } )
+  # - export VERSION_MAJOR="${semver[0]}"
+  # - export VERSION_MINOR="${semver[1]}"
+  # - export VERSION_PATCH="${semver[2]}"
+  # - echo "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
+
+cache:
+  paths:
+  - .env/
+
+stages:
+  - prepare
+  - test
+  - package
+
+prepare:
+  stage: prepare
+  script: make installDependencies devenv
+
+checkstyle:
+  stage: test
+  script: make checkstyle
+  artifacts:
+    # https://docs.gitlab.com/ee/ci/yaml/README.html#artifacts
+    # The folder name 'dist' comes from the Makefile
+    paths: [build/**]
+    when: on_success
+    expire_in: 1 mos
+
+unittests:
+  stage: test
+  script: make unittest
+  coverage: '/TOTAL.*\s(\d*)%/'
+  artifacts:
+    # https://docs.gitlab.com/ee/ci/yaml/README.html#artifacts
+    # The folder name 'dist' comes from the Makefile
+    paths: [build/**]
+    when: on_success
+    expire_in: 1 mos
+
+integrationtests:
+  stage: test
+  script: make integrationtest
+  coverage: '/^TOTAL\s+\d+\s+\d+\s+(\d+\%)$/'
+  artifacts:
+    # https://docs.gitlab.com/ee/ci/yaml/README.html#artifacts
+    # The folder name 'dist' comes from the Makefile
+    paths: [build/**]
+    when: on_success
+    expire_in: 1 mos
+  only: 
+    - master
+
+createDevImage:
+  stage: package
+  script: 
+    - make dockerGitLab
+  when: on_success
+  tags: 
+    - docker-build
+
+createReleaseImage:
+  stage: package
+  script: 
+    #TODO: Adapt
+    - make docker image="$CI_PROJECT_NAME" tag="$CI_COMMIT_TAG" git_commit="$CI_COMMIT_SHA"
+  only:
+    - tags
+  when: on_success
+  tags: 
+    - docker-build
